@@ -25,6 +25,9 @@ struct uiWindow {
 	void (*onContentSizeChanged)(uiWindow *, void *);
 	void *onContentSizeChangedData;
 	gboolean fullscreen;
+
+	// LEE: position feature
+	gboolean changingPosition;
 };
 
 static gboolean onClosing(GtkWidget *win, GdkEvent *e, gpointer data)
@@ -276,4 +279,55 @@ uiWindow *uiNewWindow(const char *title, int width, int height, int hasMenubar)
 	g_object_ref(w->widget);
 
 	return w;
+}
+
+// LEE: position feature
+// TODO allow specifying either as NULL on all platforms
+void uiWindowPosition(uiWindow *w, int *x, int *y)
+{
+	gint rx, ry;
+
+	gtk_window_get_position(w->window, &rx, &ry);
+	*x = rx;
+	*y = ry;
+}
+
+void uiWindowSetPosition(uiWindow *w, int x, int y)
+{
+	w->changingPosition = TRUE;
+	gtk_window_move(w->window, x, y);
+	// gtk_window_move() is asynchronous
+	// we need to wait for a configure-event
+	// thanks to hergertme in irc.gimp.net/#gtk+
+	while (w->changingPosition)
+		if (!uiMainStep(1))
+			break;		// stop early if uiQuit() called
+}
+
+void uiWindowCenter(uiWindow *w)
+{
+	gboolean visible;
+	g_object_get(w->widget, "visible", &visible, NULL);
+
+	if (visible) {
+		gint x, y;
+		GtkAllocation winalloc;
+		GdkWindow *gdkwin;
+		GdkScreen *screen;
+		GdkRectangle workarea;
+
+		gtk_widget_get_allocation(w->widget, &winalloc);
+		gdkwin = gtk_widget_get_window(w->widget);
+		screen = gdk_window_get_screen(gdkwin);
+		gdk_screen_get_monitor_workarea(screen,
+			gdk_screen_get_monitor_at_window(screen, gdkwin),
+			&workarea);
+
+		x = (workarea.width - winalloc.width) / 2;
+		y = (workarea.height - winalloc.height) / 2;
+		// TODO move up slightly? see what Mutter or GNOME Shell or GNOME Terminal do(es)?
+		uiWindowSetPosition(w, x, y);
+	} else {
+		gtk_window_set_position(w->window, GTK_WIN_POS_CENTER);
+	}
 }
