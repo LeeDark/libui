@@ -166,7 +166,7 @@ static void onOpenFileClicked(uiButton *b, void *data)
 	uiEntry *entry = uiEntry(data);
 	char *filename;
 
-	filename = uiOpenFile(mainwin);
+	filename = uiOpenFile(mainwin, NULL);
 	if (filename == NULL) {
 		uiEntrySetText(entry, "(cancelled)");
 		return;
@@ -180,7 +180,7 @@ static void onSaveFileClicked(uiButton *b, void *data)
 	uiEntry *entry = uiEntry(data);
 	char *filename;
 
-	filename = uiSaveFile(mainwin);
+	filename = uiSaveFile(mainwin, NULL);
 	if (filename == NULL) {
 		uiEntrySetText(entry, "(cancelled)");
 		return;

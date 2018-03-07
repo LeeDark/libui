@@ -92,7 +92,7 @@ static void* handlerCellValue(uiTableModelHandler *h, uiTableModel *m, int row, 
 }
 
 
-static void handlerSetCellValue(uiTableModelHandler *h, uiTableModel *m, int row, int col, const void *val)
+static void handlerSetCellValue(uiTableModelHandler *h, uiTableModel *m, int row, int col, void *val)
 {
 //	printf("handlerSetCell(row %d, col %d)\n", row,col);
 }
