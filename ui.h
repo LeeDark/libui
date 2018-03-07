@@ -112,6 +112,10 @@ _UI_EXTERN void uiWindowSetChild(uiWindow *w, uiControl *child);
 _UI_EXTERN int uiWindowMargined(uiWindow *w);
 _UI_EXTERN void uiWindowSetMargined(uiWindow *w, int margined);
 _UI_EXTERN uiWindow *uiNewWindow(const char *title, int width, int height, int hasMenubar);
+// LEE: position feature
+_UI_EXTERN void uiWindowPosition(uiWindow *w, int *x, int *y);
+_UI_EXTERN void uiWindowSetPosition(uiWindow *w, int x, int y);
+_UI_EXTERN void uiWindowCenter(uiWindow *w);
 
 typedef struct uiButton uiButton;
 #define uiButton(this) ((uiButton *) (this))
@@ -265,8 +269,8 @@ _UI_EXTERN uiMenuItem *uiMenuAppendAboutItem(uiMenu *m);
 _UI_EXTERN void uiMenuAppendSeparator(uiMenu *m);
 _UI_EXTERN uiMenu *uiNewMenu(const char *name);
 
-_UI_EXTERN char *uiOpenFile(uiWindow *parent);
-_UI_EXTERN char *uiSaveFile(uiWindow *parent);
+_UI_EXTERN char *uiOpenFile(uiWindow *parent, const char* filename);
+_UI_EXTERN char *uiSaveFile(uiWindow *parent, const char* filename);
 _UI_EXTERN void uiMsgBox(uiWindow *parent, const char *title, const char *description);
 _UI_EXTERN void uiMsgBoxError(uiWindow *parent, const char *title, const char *description);
 
@@ -683,6 +687,9 @@ _UI_EXTERN void uiGridInsertAt(uiGrid *g, uiControl *c, uiControl *existing, uiA
 _UI_EXTERN int uiGridPadded(uiGrid *g);
 _UI_EXTERN void uiGridSetPadded(uiGrid *g, int padded);
 _UI_EXTERN uiGrid *uiNewGrid(void);
+
+// TODO merge
+#include "uitable.h"
 
 #ifdef __cplusplus
 }
