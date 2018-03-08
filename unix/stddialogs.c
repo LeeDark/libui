@@ -23,8 +23,10 @@ static char *filedialog(GtkWindow *parent, GtkFileChooserAction mode, const gcha
 	gtk_file_chooser_set_show_hidden(fc, TRUE);
 	gtk_file_chooser_set_do_overwrite_confirmation(fc, TRUE);
 	gtk_file_chooser_set_create_folders(fc, TRUE);
-	if (default_filename != NULL) {
+	if (mode == GTK_FILE_CHOOSER_ACTION_OPEN) {
 		gtk_file_chooser_set_filename(fc, default_filename);
+	} else if (mode == GTK_FILE_CHOOSER_ACTION_SAVE) {
+		gtk_file_chooser_set_current_name(fc, default_filename);
 	}
 	response = gtk_dialog_run(GTK_DIALOG(fcd));
 	if (response != GTK_RESPONSE_ACCEPT) {
